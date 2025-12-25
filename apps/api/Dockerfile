@@ -2,5 +2,14 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Placeholder container for Milestone 1 API scaffold.
-CMD ["/bin/sh", "-c", "tail -f /dev/null"]
+COPY apps/api/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY apps/api/app /app/app
+COPY packages/db /app/db
+
+ENV PYTHONPATH=/app:/app/db
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

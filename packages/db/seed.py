@@ -4,10 +4,13 @@ import os
 import uuid
 from datetime import datetime
 
+from passlib.context import CryptContext
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from models import Camera, User
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def get_database_url() -> str:
@@ -21,10 +24,12 @@ def main() -> None:
     engine = create_engine(get_database_url())
 
     with Session(engine) as session:
-        def get_or_create_user(email: str, password_hash: str) -> User:
+        def get_or_create_user(email: str, password: str) -> User:
             existing_user = session.scalar(select(User).where(User.email == email))
             if existing_user:
+                existing_user.hashed_password = pwd_context.hash(password)
                 return existing_user
+            password_hash = pwd_context.hash(password)
             new_user = User(
                 id=uuid.uuid4(),
                 email=email,
@@ -34,8 +39,8 @@ def main() -> None:
             session.add(new_user)
             return new_user
 
-        admin_user = get_or_create_user("admin@robocam.local", "admin_password_hash")
-        demo_user = get_or_create_user("demo@robocam.local", "demo_password_hash")
+        admin_user = get_or_create_user("admin@robocam.com", "adminpass123")
+        demo_user = get_or_create_user("demo@robocam.com", "demopass123")
 
         existing_camera = session.scalar(
             select(Camera).where(Camera.user_id == demo_user.id, Camera.name == "Demo Camera")

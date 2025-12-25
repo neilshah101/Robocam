@@ -18,3 +18,21 @@ Changes:
 Summary:
 - Captured the locked product model, feature scope, pricing, and execution plan.
 - Aligned privacy, architecture, and risk docs to the same scope.
+
+## 2025-12-25T09:12:48Z
+Changes:
+- Added Milestone 1 folder structure and placeholder READMEs under `apps/`, `services/`, `packages/`, and `infra/`.
+- Added `docs/Tech-Stack.md`, `docs/Folder-Structure.md`, and `docs/Milestone-1-Tasks.md`.
+- Created Docker Compose for API/worker/Postgres/Redis/MinIO and added `.env.example`.
+- Added DB package scaffolding with SQLAlchemy models, Alembic config, migration, and seed script.
+- Added Makefile targets for DB migrate/seed and a `db-psql` helper.
+- Fixed Alembic env import path and `.env` loading behavior.
+- Moved Postgres host port to `55432` to avoid local conflicts.
+- Added FastAPI auth API with signup/login/me plus requirements and Dockerfile wiring.
+- Updated seed data to include admin/demo users, valid emails, and bcrypt hashing.
+- Resolved local email validation by updating DB emails from `.local` to `.com`.
+
+Summary:
+- Module 1: dev environment and repo structure complete.
+- Module 2: DB models + migrations + seeding verified against Docker Postgres.
+- Module 3: Auth endpoints scaffolded and validated with curl login flow.
